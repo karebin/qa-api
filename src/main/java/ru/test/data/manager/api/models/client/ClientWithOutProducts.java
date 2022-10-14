@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import javax.persistence.Table;
 
-
 @Data
 @Table(schema = "public", name = "client")
 @NoArgsConstructor

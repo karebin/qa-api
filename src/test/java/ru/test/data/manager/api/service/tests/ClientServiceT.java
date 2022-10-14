@@ -15,11 +15,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.test.data.manager.api.entity.ClientEntity;
+import ru.test.data.manager.api.entity.ProductEntity;
 import ru.test.data.manager.api.models.client.Client;
 import ru.test.data.manager.api.models.client.ClientWithOutProducts;
 import ru.test.data.manager.api.models.client.ContactInfo;
+import ru.test.data.manager.api.models.product.Product;
+import ru.test.data.manager.api.models.productEnum.ProductType;
 import ru.test.data.manager.api.repository.client.ClientRepository;
+import ru.test.data.manager.api.repository.product.ProductRepository;
 import ru.test.data.manager.api.services.client.ClientService;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -36,6 +43,8 @@ public class ClientServiceT {
     @Autowired
     ClientService clientService;
 
+    @Autowired
+    ProductRepository productRepository;
     @Autowired
     ClientRepository clientRepository;
 
@@ -58,18 +67,67 @@ public class ClientServiceT {
         }
     }
 
-    ClientWithOutProducts testClient =
-            new ClientWithOutProducts(
-                    999,
-                    "ИльяТ",
-                    "КаребинТ",
-                    new ContactInfo("79999999999", "test@mail.com"));
+    ClientWithOutProducts testClient = new ClientWithOutProducts(
+            999,
+            "ИльяТ",
+            "КаребинТ",
+            new ContactInfo("79999999999", "test@mail.com"));
 
-    @DisplayName("Получение случайного клиента из БД")
+    String clientWithProductPhoneNumber = "79991232293";
+    String getClientWithOutProductPhoneNumber = "79991232233";
+
+    private Product productEntityToProduct(ProductEntity productEntity) {
+        return Product.builder()
+                .id(productEntity.getId())
+                .clientId(productEntity.getClientId())
+                .productType(new ProductType(productEntity.getType(), productEntity.getProductType()))
+                .balance(productEntity.getBalance())
+                .build();
+    }
+
+    private List<Product> productEntityListToProductList(List<ProductEntity> productEntities) {
+        List<Product> productList = new ArrayList<>();
+        productEntities.forEach(pe -> {
+                    productList.add(productEntityToProduct(pe));
+                }
+        );
+        return productList;
+    }
+
+    @DisplayName("Получение случайного клиента")
     @Test
-    public void checkGetRandomClientFromDb() {
-        log.info("Получен клиент " + clientService.getRandomClient());
+    public void checkGetRandomClient() {
         assertThat("Клиент не получен", clientService.getRandomClient().getId() != 0);
+    }
+
+    @DisplayName("Клиентские данные (без продуктов) возращаемые сервисом идентичны данным в БД")
+    @Test
+    public void checkGetClientDataWithOutProduct() {
+        Client clientFromService = clientService.getClientByPhone(clientWithProductPhoneNumber);
+        ClientEntity clientFromDB = clientRepository.findByMobilePhone(clientWithProductPhoneNumber);
+        Client clientFromDB2 = Client.builder()
+                .id(clientFromDB.getId())
+                .firstName(clientFromDB.getFirstName())
+                .lastName(clientFromDB.getLastName())
+                .contactInfo(new ContactInfo(clientFromDB.getMobilePhone(), clientFromDB.getEmail()))
+                .products(new ArrayList<>())
+                .build();
+        assertEquals("Данные клиента из бд и сервиса не идентичны", clientFromService, clientFromDB2);
+    }
+
+    @DisplayName("Данные по клиентским продуктам возвращаемые сервисом идентичны с данными в БД")
+    @Test
+    public void checkGetClientDataWithProduct() {
+        Client clientFromService = clientService.getClientByPhone(getClientWithOutProductPhoneNumber);
+        List<ProductEntity> clientProductsFromDb = productRepository.findAllByClientId(clientFromService.getId());
+
+        Client clientFromDB2 = Client.builder()
+                .firstName(clientFromService.getFirstName())
+                .contactInfo(new ContactInfo(clientFromService.getContactInfo().getMobilePhone(), null))
+                .products(productEntityListToProductList(clientProductsFromDb))
+                .build();
+        assertEquals("Продукты клиента из сервиса, не соответстуют продуктам из БД",
+                clientFromService.getProducts(), clientFromDB2.getProducts());
     }
 
     @DisplayName("Получение всех клиентов из БД")

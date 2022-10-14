@@ -18,7 +18,8 @@ INSERT INTO client (first_name, last_name, mobile_phone, email) VALUES
 ('Василий','Смирнов','79991232235', 'blak@mail.com'),
 ('Анна',NULL,'79991232236', 'anka@mail.com'),
 ('Александр','Лисицын','79991232237', 'loga@mail.com'),
-('Самвел','Иванов','79991232238', 'ivaniv@mail.com');
+('Самвел','Иванов','79991232238', 'ivaniv@mail.com'),
+('Иван','БезПродуктов','79991232293', 'ivaniv@mail.com');
 
 CREATE TABLE public.product (
 id SERIAL PRIMARY KEY,
