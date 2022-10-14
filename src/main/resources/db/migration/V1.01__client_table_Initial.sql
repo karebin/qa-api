@@ -1,0 +1,8 @@
+CREATE TABLE public.CLIENT (
+id SERIAL UNIQUE,
+first_name VARCHAR(45) NOT NULL,
+last_name VARCHAR(45),
+mobile_phone VARCHAR(45) PRIMARY KEY NOT NULL,
+email VARCHAR(45)
+);
+
