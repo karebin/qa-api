@@ -1,0 +1,20 @@
+{
+  "id": 2,
+  "firstName": "Сергей",
+  "lastName": "Петров",
+  "contactInfo": {
+    "mobilePhone": "79991232232",
+    "email": "serega@mail.com"
+  },
+  "products": [
+    {
+      "clientId": 2,
+      "id": 2,
+      "productType": {
+        "type": "CARD",
+        "productType": "CREDIT"
+      },
+      "balance": 20
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+[
+  {
+    "id": 1,
+    "firstName": "Илья",
+    "lastName": "Каребин",
+    "contactInfo": {
+      "mobilePhone": "79991232233"
+    },
+    "products": [
+      {
+        "clientId": 1,
+        "id": 1,
+        "productType": {
+          "type": "CARD",
+          "productType": "DEBIT"
+        },
+        "balance": 10
+      },
+      {
+        "clientId": 1,
+        "id": 4,
+        "productType": {
+          "type": "ACCOUNT",
+          "productType": "ML"
+        },
+        "balance": 10
+      },
+      {
+        "clientId": 1,
+        "id": 5,
+        "productType": {
+          "type": "ACCOUNT",
+          "productType": "DEBIT"
+        },
+        "balance": 430
+      },
+      {
+        "clientId": 1,
+        "id": 8,
+        "productType": {
+          "type": "CARD",
+          "productType": "CREDIT"
+        },
+        "balance": 1210
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "firstName": "Сергей",
+    "lastName": "Петров",
+    "contactInfo": {
+      "mobilePhone": "79991232232",
+      "email": "serega@mail.com"
+    },
+    "products": [
+      {
+        "clientId": 2,
+        "id": 2,
+        "productType": {
+          "type": "CARD",
+          "productType": "CREDIT"
+        },
+        "balance": 20
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "firstName": "Григорий",
+    "contactInfo": {
+      "mobilePhone": "79991232231",
+      "email": "grisha@mail.com"
+    },
+    "products": [
+      {
+        "clientId": 3,
+        "id": 3,
+        "productType": {
+          "type": "LOAN",
+          "productType": "AUTO"
+        },
+        "balance": 130
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "firstName": "Андрей",
+    "lastName": "Самойлов",
+    "contactInfo": {
+      "mobilePhone": "79991232234",
+      "email": "grom@mail.com"
+    },
+    "products": [
+      {
+        "clientId": 4,
+        "id": 6,
+        "productType": {
+          "type": "LOAN",
+          "productType": "AUTO"
+        },
+        "balance": 340
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "firstName": "Василий",
+    "lastName": "Смирнов",
+    "contactInfo": {
+      "mobilePhone": "79991232235",
+      "email": "blak@mail.com"
+    },
+    "products": [
+      {
+        "clientId": 5,
+        "id": 7,
+        "productType": {
+          "type": "LOAN",
+          "productType": "ML"
+        },
+        "balance": 50
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "firstName": "Анна",
+    "contactInfo": {
+      "mobilePhone": "79991232236",
+      "email": "anka@mail.com"
+    },
+    "products": []
+  },
+  {
+    "id": 7,
+    "firstName": "Александр",
+    "lastName": "Лисицын",
+    "contactInfo": {
+      "mobilePhone": "79991232237",
+      "email": "loga@mail.com"
+    },
+    "products": []
+  },
+  {
+    "id": 8,
+    "firstName": "Самвел",
+    "lastName": "Иванов",
+    "contactInfo": {
+      "mobilePhone": "79991232238",
+      "email": "ivaniv@mail.com"
+    },
+    "products": []
+  },
+  {
+    "id": 9,
+    "firstName": "Иван",
+    "lastName": "БезПродуктов",
+    "contactInfo": {
+      "mobilePhone": "79991232293",
+      "email": "ivaniv@mail.com"
+    },
+    "products": []
+  }
+]

@@ -32,7 +32,7 @@ public class ClientsController {
     @ApiOperation(value = "Получить клиента", notes = "Получить клиента по номеру телефона")
     @ApiImplicitParam(name = "phoneNumber", required = true)
     @GetMapping("/getClientByPhoneNumber")
-    public Client getRandomClient(@RequestParam String phoneNumber) {
+    public Client getClientByPhoneNumber(@RequestParam String phoneNumber) {
         return clientService.getClientByPhone(phoneNumber);
     }
 

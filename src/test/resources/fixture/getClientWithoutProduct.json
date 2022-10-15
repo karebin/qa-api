@@ -1,0 +1,10 @@
+{
+  "id": 7,
+  "firstName": "Александр",
+  "lastName": "Лисицын",
+  "contactInfo": {
+    "mobilePhone": "79991232237",
+    "email": "loga@mail.com"
+  },
+  "products": []
+}

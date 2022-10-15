@@ -1,0 +1,46 @@
+{
+  "id": 1,
+  "firstName": "Илья",
+  "lastName": "Каребин",
+  "contactInfo": {
+    "mobilePhone": "79991232233"
+  },
+  "products": [
+    {
+      "clientId": 1,
+      "id": 1,
+      "productType": {
+        "type": "CARD",
+        "productType": "DEBIT"
+      },
+      "balance": 10
+    },
+    {
+      "clientId": 1,
+      "id": 4,
+      "productType": {
+        "type": "ACCOUNT",
+        "productType": "ML"
+      },
+      "balance": 10
+    },
+    {
+      "clientId": 1,
+      "id": 5,
+      "productType": {
+        "type": "ACCOUNT",
+        "productType": "DEBIT"
+      },
+      "balance": 430
+    },
+    {
+      "clientId": 1,
+      "id": 8,
+      "productType": {
+        "type": "CARD",
+        "productType": "CREDIT"
+      },
+      "balance": 1210
+    }
+  ]
+}

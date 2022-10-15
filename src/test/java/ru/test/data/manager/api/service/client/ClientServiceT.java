@@ -1,4 +1,4 @@
-package ru.test.data.manager.api.service.tests;
+package ru.test.data.manager.api.service.client;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,7 +74,7 @@ public class ClientServiceT {
             new ContactInfo("79999999999", "test@mail.com"));
 
     String clientWithProductPhoneNumber = "79991232293";
-    String getClientWithOutProductPhoneNumber = "79991232233";
+    String clientWithOutProductPhoneNumber = "79991232233";
 
     private Product productEntityToProduct(ProductEntity productEntity) {
         return Product.builder()
@@ -115,19 +115,19 @@ public class ClientServiceT {
         assertEquals("Данные клиента из бд и сервиса не идентичны", clientFromService, clientFromDB2);
     }
 
-    @DisplayName("Данные по клиентским продуктам возвращаемые сервисом идентичны с данными в БД")
+    @DisplayName("Клиентские данные (продукты) возращаемые сервисом идентичны данным в БД")
     @Test
     public void checkGetClientDataWithProduct() {
-        Client clientFromService = clientService.getClientByPhone(getClientWithOutProductPhoneNumber);
+        Client clientFromService = clientService.getClientByPhone(clientWithOutProductPhoneNumber);
         List<ProductEntity> clientProductsFromDb = productRepository.findAllByClientId(clientFromService.getId());
 
-        Client clientFromDB2 = Client.builder()
+        Client buildClientWithProductFromDB = Client.builder()
                 .firstName(clientFromService.getFirstName())
                 .contactInfo(new ContactInfo(clientFromService.getContactInfo().getMobilePhone(), null))
                 .products(productEntityListToProductList(clientProductsFromDb))
                 .build();
         assertEquals("Продукты клиента из сервиса, не соответстуют продуктам из БД",
-                clientFromService.getProducts(), clientFromDB2.getProducts());
+                clientFromService.getProducts(), buildClientWithProductFromDB.getProducts());
     }
 
     @DisplayName("Получение всех клиентов из БД")

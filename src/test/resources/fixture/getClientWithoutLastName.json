@@ -1,0 +1,9 @@
+{
+  "id": 6,
+  "firstName": "Анна",
+  "contactInfo": {
+    "mobilePhone": "79991232236",
+    "email": "anka@mail.com"
+  },
+  "products": []
+}
