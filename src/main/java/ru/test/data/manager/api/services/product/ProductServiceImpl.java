@@ -20,14 +20,17 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Override
     public List<Product> getProductList() {
         return productEntityListToProductList(productRepository.findAll(Sort.by("clientId")));
     }
 
+    @Override
     public List<Product> getClientProductList(int clientId) {
         return productEntityListToProductList(productRepository.findAllByClientId(clientId));
     }
 
+    @Override
     public ProductList getProductListByClient(long clientId) {
         return
                 new ProductList().builder()
@@ -37,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
     public Product addProductByClientId(Product product, long clientId) {
         if (product.getProductType() == null
                 || product.getProductType().getType() == null

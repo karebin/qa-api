@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -46,6 +47,7 @@ public class ProductServiceT {
 
 
     @DisplayName("Добавление продукта")
+    @Rollback
     @Test
     public void checkAddProductToClient() {
         productService.addProductByClientId(testProductObj, testClient.getId());
