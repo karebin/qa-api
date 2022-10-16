@@ -1,7 +1,12 @@
 package ru.test.data.manager.api.controllers.product;
 
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,12 +35,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @ComponentScan({"ru.test.data.manager.api"})
 @AutoConfigureMockMvc
+@RunWith(DataProviderRunner.class)
+
 public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
     ObjectMapper mapper = new ObjectMapper();
     JsonNode actualObj;
+
+    String resourcesProductRequestFixture = "fixture/request/product/";
+
+    @DataProvider()
+    public static Object[][] checkAddProductError() {
+        return new String[][]{
+                {"addProductWithNegativeBalanceRequest.json", "Balance cannot be negative or more that 4 000 000"},
+                {"addProductWithSoMuchBalanceRequest.json", "Balance cannot be negative or more that 4 000 000"},
+                {"addProductWithOutTypeRequest.json", "Fields: Type or ProductType is empty"},
+                {"addProductWithOutTypeRequest.json", "Fields: Type or ProductType is empty"},
+                {"addProductWithOutTypeRequest.json", "Fields: Type or ProductType is empty"}
+        };
+    }
 
     @Test
     @Rollback
@@ -54,10 +74,11 @@ public class ProductControllerIT {
         assertEquals(expected, result.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
 
-    @Test
-    @DisplayName("Получение ошибки в случае добавление продукта с отрицательным балансом {balance}")
-    void checkIsNegativeBalanceError() throws Exception {
-        String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductWithNegativeBalanceRequest.json");
+    @ParameterizedTest()
+    @DisplayName("Получение ошибок для параметров {balance<0, balance>4000000, type, productType is null/empty}")
+    @MethodSource("checkAddProductError")
+    void dataProviderTest(String requestFixture, String errorMessage) throws Exception {
+        String request = ResourceHelper.getFixtureFromResource(resourcesProductRequestFixture + requestFixture);
 
         actualObj = mapper.readTree(request);
 
@@ -65,24 +86,11 @@ public class ProductControllerIT {
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(String.valueOf(actualObj)))
                 .andExpect(jsonPath("$.message").value
-                        ("Balance cannot be negative or more that 4 000 000"));
+                        (errorMessage));
     }
 
     @Test
-    @DisplayName("Получение ошибки в случае добавление продукта с балансом > 4 000 000 {balance}")
-    void checkSoMuchBalanceError() throws Exception {
-        String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductWithSoMuchBalanceRequest.json");
-
-        actualObj = mapper.readTree(request);
-
-        mockMvc.perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(String.valueOf(actualObj)))
-                .andExpect(jsonPath("$.message").value
-                        ("Balance cannot be negative or more that 4 000 000"));
-    }
-
-    @Test
+    @DataProvider
     @DisplayName("Получение ошибки при добавдении продукта клиенту не заведенному в системе")
     void addProductToEmptyClient() throws Exception {
         String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductRequest.json");
@@ -96,45 +104,4 @@ public class ProductControllerIT {
                         ("Client for add product not found"));
     }
 
-    @Test
-    @DisplayName("Получение ошибки при добавдении продукта без типа {type}")
-    void addProductWithOutType() throws Exception {
-        String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductWithOutTypeRequest.json");
-
-        actualObj = mapper.readTree(request);
-
-        mockMvc.perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(String.valueOf(actualObj)))
-                .andExpect(jsonPath("$.message").value
-                        ("Fields: Type or ProductType is empty"));
-    }
-
-    @Test
-    @DisplayName("Получение ошибки при добавдении продукта без типа {productType}")
-    void addProductWithOutProductType() throws Exception {
-        String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductWithOutTypeRequest.json");
-
-        actualObj = mapper.readTree(request);
-
-        mockMvc.perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(String.valueOf(actualObj)))
-                .andExpect(jsonPath("$.message").value
-                        ("Fields: Type or ProductType is empty"));
-    }
-
-    @Test
-    @DisplayName("Добавление продукта без типа {ProductType.productType}")
-    void addProductWithOutMainProductType() throws Exception {
-        String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductWithOutTypeRequest.json");
-
-        actualObj = mapper.readTree(request);
-
-        mockMvc.perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(String.valueOf(actualObj)))
-                .andExpect(jsonPath("$.message").value
-                        ("Fields: Type or ProductType is empty"));
-    }
 }

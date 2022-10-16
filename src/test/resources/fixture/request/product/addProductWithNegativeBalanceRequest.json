@@ -1,0 +1,7 @@
+{
+  "balance": -100,
+  "productType": {
+    "productType": "TestProductType",
+    "type": "TestType"
+  }
+}

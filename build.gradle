@@ -52,7 +52,8 @@ configurations {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.projectlombok:lombok:1.18.20'
-    implementation 'junit:junit:4.13.1'
+    implementation 'junit:junit:4.13.2'
+    testImplementation group: 'com.tngtech.junit.dataprovider', name: 'junit4-dataprovider', version: '2.6'
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
