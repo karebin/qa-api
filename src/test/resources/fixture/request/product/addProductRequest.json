@@ -1,0 +1,7 @@
+{
+  "balance": 990,
+  "productType": {
+    "productType": "TestProductType",
+    "type": "TestType"
+  }
+}

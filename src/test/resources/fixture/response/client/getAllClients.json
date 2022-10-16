@@ -162,5 +162,15 @@
       "email": "ivaniv@mail.com"
     },
     "products": []
+  },
+  {
+    "id": 10,
+    "firstName": "Олег",
+    "lastName": "Добавим_продукт",
+    "contactInfo": {
+      "mobilePhone": "79991232294",
+      "email": "ivaniv@mail.com"
+    },
+    "products": []
   }
 ]

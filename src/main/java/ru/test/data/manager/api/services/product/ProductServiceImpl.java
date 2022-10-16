@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.test.data.manager.api.entity.ProductEntity;
+import ru.test.data.manager.api.exception.erroe.client.ClientNotFound;
+import ru.test.data.manager.api.exception.erroe.product.ProductValidation;
 import ru.test.data.manager.api.models.product.Product;
 import ru.test.data.manager.api.models.product.ProductList;
-import ru.test.data.manager.api.models.productEnum.ProductType;
+import ru.test.data.manager.api.models.product.ProductType;
 import ru.test.data.manager.api.repository.product.ProductRepository;
 
 import java.util.ArrayList;
@@ -18,18 +20,14 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-
-    @Override
     public List<Product> getProductList() {
         return productEntityListToProductList(productRepository.findAll(Sort.by("clientId")));
     }
 
-    @Override
     public List<Product> getClientProductList(int clientId) {
         return productEntityListToProductList(productRepository.findAllByClientId(clientId));
     }
 
-    @Override
     public ProductList getProductListByClient(long clientId) {
         return
                 new ProductList().builder()
@@ -40,7 +38,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product addProductByClientId(Product product, long clientId) {
-        return productEntityToProduct(productRepository.save(productToProductEntityWithClientIdParam(product,clientId)));
+        if (product.getProductType() == null
+                || product.getProductType().getType() == null
+                || product.getProductType().getProductType() == null)
+            throw new ProductValidation("Fields: Type or ProductType is empty");
+
+        if (product.getBalance() < 0 || product.getBalance() > 4000000)
+            throw new ProductValidation("Balance cannot be negative or more that 4 000 000");
+
+        try {
+            return productEntityToProduct(productRepository.save(productToProductEntityWithClientIdParam(product, clientId)));
+        } catch (RuntimeException e) {
+            throw new ClientNotFound("Client for add product not found");
+        }
     }
 
     private Product productEntityToProduct(ProductEntity productEntity) {

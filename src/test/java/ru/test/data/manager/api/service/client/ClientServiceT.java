@@ -6,22 +6,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.test.data.manager.api.db.TestContainerPostgres;
 import ru.test.data.manager.api.entity.ClientEntity;
 import ru.test.data.manager.api.entity.ProductEntity;
 import ru.test.data.manager.api.models.client.Client;
 import ru.test.data.manager.api.models.client.ClientWithOutProducts;
 import ru.test.data.manager.api.models.client.ContactInfo;
 import ru.test.data.manager.api.models.product.Product;
-import ru.test.data.manager.api.models.productEnum.ProductType;
+import ru.test.data.manager.api.models.product.ProductType;
 import ru.test.data.manager.api.repository.client.ClientRepository;
 import ru.test.data.manager.api.repository.product.ProductRepository;
 import ru.test.data.manager.api.services.client.ClientService;
@@ -32,40 +29,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = ClientServiceT.class)
-@ContextConfiguration(initializers = {ClientServiceT.Initializer.class})
+@ContextConfiguration(initializers = {TestContainerPostgres.class})
 @Testcontainers
 @ComponentScan({"ru.test.data.manager.api"})
 @ActiveProfiles("test")
+
 public class ClientServiceT {
-
     Logger log = LogManager.getLogger("");
-
     @Autowired
     ClientService clientService;
-
     @Autowired
     ProductRepository productRepository;
     @Autowired
     ClientRepository clientRepository;
-
-    @Container
-    public static PostgreSQLContainer postgres = (PostgreSQLContainer) new PostgreSQLContainer("postgres:alpine")
-            .withDatabaseName("postgresTest")
-            .withUsername("postgresTest")
-            .withPassword("postgresTest")
-            .withInitScript("db.sql");
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            System.out.println("УРЛ " + postgres.getJdbcUrl());
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgres.getJdbcUrl(),
-                    "spring.datasource.username=" + postgres.getUsername(),
-                    "spring.datasource.password=" + postgres.getPassword()
-            ).applyTo(configurableApplicationContext);
-            System.out.println(configurableApplicationContext.getEnvironment());
-        }
-    }
 
     ClientWithOutProducts testClient = new ClientWithOutProducts(
             999,
@@ -152,6 +128,7 @@ public class ClientServiceT {
     }
 
     @DisplayName("Успешное добавление клиента")
+    @Rollback
     @Test
     public void checkSuccessClientAdd() {
         clientService.addClient(testClient);

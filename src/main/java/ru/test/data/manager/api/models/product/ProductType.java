@@ -1,4 +1,4 @@
-package ru.test.data.manager.api.models.productEnum;
+package ru.test.data.manager.api.models.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 public class ProductType {
-    @NonNull
     private String type;
-    @NonNull
     private String productType;
 }

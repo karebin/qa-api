@@ -23,12 +23,12 @@ public class ProductController {
 //        return productService.getProductList();
 //    }
 //
-//    @ApiOperation(value = "Получить продукты клиента", notes = "Получить продукты клиента по его clientId")
-//    @ApiImplicitParam(name = "clientId")
-//    @GetMapping("/getProductByClientId")
-//    public ProductList getProductByClientId(@RequestParam long clientId) {
-//        return productService.getProductListByClient(clientId);
-//    }
+    @ApiOperation(value = "Получить продукты клиента", notes = "Получить продукты клиента по его clientId")
+    @ApiImplicitParam(name = "clientId")
+    @GetMapping("/getProductByClientId")
+    public ProductList getProductByClientId(@RequestParam long clientId) {
+        return productService.getProductListByClient(clientId);
+    }
 
     @ApiOperation(value = "Добавить продукт клиенту", notes = "Добавить продукт клиенту по clientId")
     @ApiImplicitParam(name = "clientId", required = true)

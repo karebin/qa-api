@@ -3,6 +3,7 @@ package ru.test.data.manager.api.services.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.test.data.manager.api.entity.ClientEntity;
+import ru.test.data.manager.api.exception.erroe.client.ClientNotFound;
 import ru.test.data.manager.api.models.client.Client;
 import ru.test.data.manager.api.models.client.ClientWithOutProducts;
 import ru.test.data.manager.api.models.client.ContactInfo;
@@ -12,9 +13,8 @@ import ru.test.data.manager.api.services.product.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
-public class ClientServiceImpl extends RuntimeException implements ClientService {
+public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
@@ -44,9 +44,19 @@ public class ClientServiceImpl extends RuntimeException implements ClientService
 
     @Override
     public Client getClientByPhone(String phoneNumber) {
-        Client client = clientEntityToClient(clientRepository.findByMobilePhone(phoneNumber));
-        client.setProducts(productService.getClientProductList((int) client.getId()));
-        return client;
+        if (phoneNumber.isEmpty()) throw new ClientNotFound("Client phone number can not empty");
+        clientRepository.findByMobilePhone(phoneNumber);
+        try {
+            Client client = clientEntityToClient(clientRepository.findByMobilePhone(phoneNumber));
+            client.setProducts(productService.getClientProductList((int) client.getId()));
+            return client;
+        } catch (RuntimeException e) {
+            throw new ClientNotFound("Client not found by phone number: " + phoneNumber);
+        }
+    }
+
+    private ClientEntity getClientEntityByPhoneNumber(String phoneNumber) {
+        return clientRepository.findByMobilePhone(phoneNumber);
     }
 
     @Override

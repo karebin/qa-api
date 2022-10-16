@@ -9,7 +9,6 @@ import java.util.List;
 @Service
 public interface ProductService {
 
-    // Read operation
     List<Product> getProductList();
 
     List<Product> getClientProductList(int clientId);

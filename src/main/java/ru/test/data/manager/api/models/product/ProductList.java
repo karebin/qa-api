@@ -1,7 +1,6 @@
 package ru.test.data.manager.api.models.product;
 
 import lombok.*;
-
 import java.util.List;
 
 @Data
