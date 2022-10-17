@@ -1,12 +1,9 @@
 package ru.test.data.manager.api.controllers.product;
 
-import com.tngtech.java.junit.dataprovider.DataProvider;
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @ComponentScan({"ru.test.data.manager.api"})
 @AutoConfigureMockMvc
-@RunWith(DataProviderRunner.class)
 
 public class ProductControllerIT {
     @Autowired
@@ -46,7 +42,6 @@ public class ProductControllerIT {
 
     String resourcesProductRequestFixture = "fixture/request/product/";
 
-    @DataProvider()
     public static Object[][] checkAddProductError() {
         return new String[][]{
                 {"addProductWithNegativeBalanceRequest.json", "Balance cannot be negative or more that 4 000 000"},
@@ -60,7 +55,7 @@ public class ProductControllerIT {
     @Test
     @Rollback
     @DisplayName("Добавление продукта клиенту")
-    void addProductToClient() throws Exception {
+    public void addProductToClient() throws Exception {
         String expected = ResourceHelper.getFixtureFromResource("fixture/response/product/addProduct.json");
         String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductRequest.json");
 
@@ -77,7 +72,7 @@ public class ProductControllerIT {
     @ParameterizedTest()
     @DisplayName("Получение ошибок для параметров {balance<0, balance>4000000, type, productType is null/empty}")
     @MethodSource("checkAddProductError")
-    void dataProviderTest(String requestFixture, String errorMessage) throws Exception {
+    public void dataProviderTest(String requestFixture, String errorMessage) throws Exception {
         String request = ResourceHelper.getFixtureFromResource(resourcesProductRequestFixture + requestFixture);
 
         actualObj = mapper.readTree(request);
@@ -90,9 +85,8 @@ public class ProductControllerIT {
     }
 
     @Test
-    @DataProvider
     @DisplayName("Получение ошибки при добавдении продукта клиенту не заведенному в системе")
-    void addProductToEmptyClient() throws Exception {
+    public void addProductToEmptyClient() throws Exception {
         String request = ResourceHelper.getFixtureFromResource("fixture/request/product/addProductRequest.json");
 
         actualObj = mapper.readTree(request);
@@ -103,5 +97,4 @@ public class ProductControllerIT {
                 .andExpect(jsonPath("$.message").value
                         ("Client for add product not found"));
     }
-
 }

@@ -52,8 +52,6 @@ configurations {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.projectlombok:lombok:1.18.20'
-    implementation 'junit:junit:4.13.2'
-    testImplementation group: 'com.tngtech.junit.dataprovider', name: 'junit4-dataprovider', version: '2.6'
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
@@ -62,6 +60,12 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.5.0'
 
     implementation('org.flywaydb:flyway-core')
+
+    //JUnit 5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    testImplementation("org.junit.platform:junit-platform-suite:1.8.1")
 
     //test testcontainers
     testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.16.2'
