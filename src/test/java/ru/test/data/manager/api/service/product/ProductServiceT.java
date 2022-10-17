@@ -18,9 +18,8 @@ import ru.test.data.manager.api.models.product.ProductType;
 import ru.test.data.manager.api.repository.product.ProductRepository;
 import ru.test.data.manager.api.services.client.ClientService;
 import ru.test.data.manager.api.services.product.ProductService;
-import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = ProductServiceT.class)
 @ContextConfiguration(initializers = {TestContainerPostgres.class})
@@ -45,21 +44,19 @@ public class ProductServiceT {
             .productType(new ProductType("LOAN", "Test_loan"))
             .build();
 
+    ProductEntity testProductObjEntity = ProductEntity.builder()
+            .clientId(testProductObj.getClientId())
+            .balance(testProductObj.getBalance())
+            .productType(testProductObj.getProductType().getProductType())
+            .type(testProductObj.getProductType().getType())
+            .build();
 
-    @DisplayName("Добавление продукта")
+    @DisplayName("Проверка сохранения добавленого продукта в БД")
     @Rollback
     @Test
-    public void checkAddProductToClient() {
-        productService.addProductByClientId(testProductObj, testClient.getId());
-        List<ProductEntity> productEntity = productRepository.findAllByClientId(testClient.getId());
-        long productId = productEntity.stream().findFirst()
-                .filter(productEntity1 -> productEntity1.getBalance() == 30001)
-                .get().getId();
-
-        testProductObj.setId(productId);
-        assertThat("Не найден добавленный продукт",
-                clientService.getClientByPhone(testClient.getContactInfo().getMobilePhone())
-                        .getProducts().stream()
-                        .anyMatch(product -> product.equals(testProductObj)));
+    public void checkAddProductToClientInDB() {
+        long productId = Long.parseLong(String.valueOf((productService.addProductByClientId(testProductObj, testClient.getId()))));
+        ProductEntity productEntityFromDB = productRepository.findProductByClientIdAndId(testClient.getId(), productId);
+        assertEquals("Объект сохраненный в БД, не соответствует отправленному", productEntityFromDB, testProductObjEntity);
     }
 }

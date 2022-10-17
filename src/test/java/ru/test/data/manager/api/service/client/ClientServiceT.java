@@ -76,37 +76,37 @@ public class ClientServiceT {
         assertThat("Клиент не получен", clientService.getRandomClient().getId() != 0);
     }
 
-    @DisplayName("Клиентские данные (без продуктов) возращаемые сервисом идентичны данным в БД")
+    @DisplayName("Проверка клиентских данных из БД и возвращаемых сервисом")
     @Test
     public void checkGetClientDataWithOutProduct() {
         Client clientFromService = clientService.getClientByPhone(clientWithProductPhoneNumber);
-        ClientEntity clientFromDB = clientRepository.findByMobilePhone(clientWithProductPhoneNumber);
-        Client clientFromDB2 = Client.builder()
-                .id(clientFromDB.getId())
-                .firstName(clientFromDB.getFirstName())
-                .lastName(clientFromDB.getLastName())
-                .contactInfo(new ContactInfo(clientFromDB.getMobilePhone(), clientFromDB.getEmail()))
+        ClientEntity clientEntity = clientRepository.findByMobilePhone(clientWithProductPhoneNumber);
+        Client clientFromEntity = Client.builder()
+                .id(clientEntity.getId())
+                .firstName(clientEntity.getFirstName())
+                .lastName(clientEntity.getLastName())
+                .contactInfo(new ContactInfo(clientEntity.getMobilePhone(), clientEntity.getEmail()))
                 .products(new ArrayList<>())
                 .build();
-        assertEquals("Данные клиента из бд и сервиса не идентичны", clientFromService, clientFromDB2);
+        assertEquals("Данные клиента из бд и сервиса не идентичны", clientFromService, clientFromEntity);
     }
 
-    @DisplayName("Клиентские данные (продукты) возращаемые сервисом идентичны данным в БД")
+    @DisplayName("Проверка продуктов возвращаемых с клиентом")
     @Test
-    public void checkGetClientDataWithProduct() {
+    public void checkGetClientProductDataByServiceAndEntity() {
         Client clientFromService = clientService.getClientByPhone(clientWithOutProductPhoneNumber);
-        List<ProductEntity> clientProductsFromDb = productRepository.findAllByClientId(clientFromService.getId());
+        List<ProductEntity> clientProductEntities = productRepository.findAllByClientId(clientFromService.getId());
 
-        Client buildClientWithProductFromDB = Client.builder()
+        Client productFromEntity = Client.builder()
                 .firstName(clientFromService.getFirstName())
                 .contactInfo(new ContactInfo(clientFromService.getContactInfo().getMobilePhone(), null))
-                .products(productEntityListToProductList(clientProductsFromDb))
+                .products(productEntityListToProductList(clientProductEntities))
                 .build();
         assertEquals("Продукты клиента из сервиса, не соответстуют продуктам из БД",
-                clientFromService.getProducts(), buildClientWithProductFromDB.getProducts());
+                clientFromService.getProducts(), productFromEntity.getProducts());
     }
 
-    @DisplayName("Получение всех клиентов из БД")
+    @DisplayName("Проверка количества клиентов в БД и возвращаемых сервисом")
     @Test
     public void checkGetAllClientFromDb() {
         int allClientFromService = clientService.getAllClient().size();
@@ -116,15 +116,23 @@ public class ClientServiceT {
                 allClientFromDb);
     }
 
-    @DisplayName("Получение клиента по номеру телефона")
+    @DisplayName("Получение клиента по номеру телефона (без проверки продуктов)")
     @Test
-    public void checkSuccessGetClientByPhoneNumber() {
+    public void checkClientByPhoneNumberByServiceAndEntity() {
         String testClientMobilePhone = "79991232233";
-        Client receivedFromServiceClient = clientService.getClientByPhone(testClientMobilePhone);
-        log.info("Найденные клиент" + receivedFromServiceClient);
+        Client clientFromService = clientService.getClientByPhone(testClientMobilePhone);
+        ClientEntity clientEntity = clientRepository.findByMobilePhone(testClientMobilePhone);
+
+        Client clientFromEntity = Client.builder()
+                .id(clientEntity.getId())
+                .contactInfo(new ContactInfo(clientEntity.getMobilePhone(), clientEntity.getEmail()))
+                .firstName(clientEntity.getFirstName())
+                .lastName(clientEntity.getLastName())
+                .build();
+
         assertEquals("Номер телефона найденного клиента не соответствует искомому",
-                testClientMobilePhone,
-                receivedFromServiceClient.getContactInfo().getMobilePhone());
+                clientFromService,
+                clientFromEntity);
     }
 
     @DisplayName("Успешное добавление клиента")

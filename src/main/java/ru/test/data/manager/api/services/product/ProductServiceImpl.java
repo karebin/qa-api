@@ -37,7 +37,10 @@ public class ProductServiceImpl implements ProductService {
                         .clientId(clientId)
                         .products(productEntityListToProductList(productRepository.findAllByClientId(clientId)))
                         .build();
+    }
 
+    public ProductEntity findProductByClientIdAndProductId(long clientId, long id) {
+        return productRepository.findProductByClientIdAndId(clientId, id);
     }
 
     @Override

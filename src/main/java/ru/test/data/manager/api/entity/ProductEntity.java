@@ -3,6 +3,7 @@ package ru.test.data.manager.api.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(schema = "public", name = "product")
@@ -30,4 +31,16 @@ public class ProductEntity {
     private long balance;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductEntity that = (ProductEntity) o;
+        return clientId == that.clientId && balance == that.balance && Objects.equals(type, that.type) && Objects.equals(productType, that.productType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId, type, productType, balance);
+    }
 }
