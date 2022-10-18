@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group 'ru.test.data.manager.api'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //Cucumber
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.4'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-test', version: '2.7.4'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.23'
+
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: '7.8.1'
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '7.8.1'
+    testImplementation 'io.cucumber:cucumber-junit:7.8.1'
+
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.9.0'
+
+    testImplementation 'org.projectlombok:lombok:1.18.20'
+}
+
+test {
+    useJUnitPlatform()
+}

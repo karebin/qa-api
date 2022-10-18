@@ -55,7 +55,9 @@ public class ProductServiceT {
     @Rollback
     @Test
     public void checkAddProductToClientInDB() {
-        long productId = Long.parseLong(String.valueOf((productService.addProductByClientId(testProductObj, testClient.getId()))));
+        long productId = Long.parseLong(String.valueOf((productService
+                .addProductByClientId(testProductObj, testClient.getId())
+                .getId())));
         ProductEntity productEntityFromDB = productRepository.findProductByClientIdAndId(testClient.getId(), productId);
         assertEquals("Объект сохраненный в БД, не соответствует отправленному", productEntityFromDB, testProductObjEntity);
     }

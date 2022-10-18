@@ -5,4 +5,6 @@ pluginManagement {
     }
 }
 rootProject.name = 'qa-api-manager'
+include 'integration-tests'
+
 
