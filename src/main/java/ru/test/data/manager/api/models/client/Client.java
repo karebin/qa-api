@@ -16,15 +16,13 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Client {
 
-    @NonNull
     private long id;
-    @NonNull
     private String firstName;
     private String lastName;
     private ContactInfo contactInfo;
     private List<Product> products;
 
-    public Client(@NonNull long id, @NonNull String firstName, String lastName, ContactInfo contactInfo) {
+    public Client(long id, @NonNull String firstName, String lastName, ContactInfo contactInfo) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
