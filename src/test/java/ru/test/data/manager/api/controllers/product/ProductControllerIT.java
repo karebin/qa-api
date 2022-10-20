@@ -22,7 +22,7 @@ import ru.test.data.manager.api.helper.ResourceHelper;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -36,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
-
     ObjectMapper mapper = new ObjectMapper();
     JsonNode actualObj;
 
@@ -63,7 +62,7 @@ public class ProductControllerIT {
 
         MvcResult result = mockMvc
                 .perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
+                        .contentType(APPLICATION_JSON)
                         .content(String.valueOf(actualObj))).andReturn();
 
         assertEquals(expected, result.getResponse().getContentAsString(StandardCharsets.UTF_8));
@@ -78,7 +77,7 @@ public class ProductControllerIT {
         actualObj = mapper.readTree(request);
 
         mockMvc.perform(put("/addProductByClientId?clientId=10")
-                        .contentType(APPLICATION_JSON_UTF8)
+                        .contentType(APPLICATION_JSON)
                         .content(String.valueOf(actualObj)))
                 .andExpect(jsonPath("$.message").value
                         (errorMessage));
@@ -92,7 +91,7 @@ public class ProductControllerIT {
         actualObj = mapper.readTree(request);
 
         mockMvc.perform(put("/addProductByClientId?clientId=999")
-                        .contentType(APPLICATION_JSON_UTF8)
+                        .contentType(APPLICATION_JSON)
                         .content(String.valueOf(actualObj)))
                 .andExpect(jsonPath("$.message").value
                         ("Client for add product not found"));

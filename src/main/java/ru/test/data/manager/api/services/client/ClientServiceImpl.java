@@ -12,6 +12,7 @@ import ru.test.data.manager.api.services.product.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -35,24 +36,34 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<Client> getAllClient() {
         List<Client> clients = clientEntityListToClientList(clientRepository.findAll());
-        clients.forEach(c -> {
+        List<Client> validClients = clients.stream().filter(c ->
+                        (!c.getContactInfo().getMobilePhone().isEmpty())
+                                && (!c.getFirstName().isEmpty()))
+                .collect(Collectors.toList());
+
+        validClients.forEach(c -> {
                     c.setProducts(productService.getClientProductList((int) c.getId()));
                 }
         );
-        return clients;
+        return validClients;
     }
 
     @Override
     public Client getClientByPhone(String phoneNumber) {
+        Client client;
         if (phoneNumber.isEmpty()) throw new ClientNotFound("Client phone number can not empty");
-        clientRepository.findByMobilePhone(phoneNumber);
         try {
-            Client client = clientEntityToClient(clientRepository.findByMobilePhone(phoneNumber));
-            client.setProducts(productService.getClientProductList((int) client.getId()));
-            return client;
+            client = clientEntityToClient(clientRepository.findByMobilePhone(phoneNumber));
         } catch (RuntimeException e) {
             throw new ClientNotFound("Client not found by phone number: " + phoneNumber);
         }
+        if (client.getFirstName().isEmpty()) {
+            throw new ClientNotFound("First name found client is empty");
+        }
+
+        client.setProducts(productService.getClientProductList((int) client.getId()));
+        return client;
+
     }
 
     private ClientEntity getClientEntityByPhoneNumber(String phoneNumber) {

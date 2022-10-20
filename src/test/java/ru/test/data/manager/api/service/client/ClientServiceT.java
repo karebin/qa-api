@@ -106,16 +106,6 @@ public class ClientServiceT {
                 clientFromService.getProducts(), productFromEntity.getProducts());
     }
 
-    @DisplayName("Проверка количества клиентов в БД и возвращаемых сервисом")
-    @Test
-    public void checkGetAllClientFromDb() {
-        int allClientFromService = clientService.getAllClient().size();
-        int allClientFromDb = clientRepository.findAll().size();
-        assertEquals("Кол-во клиентов в БД отлично от количества полученных клиентов",
-                allClientFromService,
-                allClientFromDb);
-    }
-
     @DisplayName("Получение клиента по номеру телефона (без проверки продуктов)")
     @Test
     public void checkClientByPhoneNumberByServiceAndEntity() {

@@ -80,7 +80,7 @@ public class ClientControllerIT {
     }
 
     @Test
-    @DisplayName("Получение корректной ошибки {message} в случае если в БД нет клиента по {PhoneNumber}")
+    @DisplayName("Получение корректной ошибки {message} в случае если в БД нет клиента по {mobilePhone}")
     void checkClientNotFoundError() throws Exception {
         mockMvc.perform(get("/getClientByPhoneNumber?phoneNumber=79991232288"))
                 .andExpect(jsonPath("$.message").value
@@ -88,10 +88,18 @@ public class ClientControllerIT {
     }
 
     @Test
-    @DisplayName("Получение корректной ошибки {message} в случае если не указан номер телефона для поска клиента {PhoneNumber}")
+    @DisplayName("Получение корректной ошибки {message} в случае если не указан номер телефона для поска клиента {mobilePhone}")
     void checkPhoneNumberIsEmptyError() throws Exception {
         mockMvc.perform(get("/getClientByPhoneNumber?phoneNumber="))
                 .andExpect(jsonPath("$.message").value
                         ("Client phone number can not empty"));
+    }
+
+    @Test
+    @DisplayName("Получение корректной ошибки {message} в случае если в БД у клиента нет имени {firstName}")
+    void checkClientFirstNameIsEmptyError() throws Exception {
+        mockMvc.perform(get("/getClientByPhoneNumber?phoneNumber=72991232263"))
+                .andExpect(jsonPath("$.message").value
+                        ("First name found client is empty"));
     }
 }

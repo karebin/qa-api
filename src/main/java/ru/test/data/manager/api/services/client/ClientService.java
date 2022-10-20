@@ -9,7 +9,6 @@ import java.util.List;
 @Service
 public interface ClientService {
 
-    // Read operation
     Client getRandomClient();
 
     List<Client> getAllClient();
