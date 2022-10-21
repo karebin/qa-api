@@ -19,9 +19,13 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-test', version: '2.7.4'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.23'
 
+    //Cucumber
     testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: '7.8.1'
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '7.8.1'
     testImplementation 'io.cucumber:cucumber-junit:7.8.1'
+
+    //Allure
+    implementation group: 'io.qameta.allure', name: 'allure-cucumber7-jvm', version: '2.19.0'
 
     testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.9.0'
 
