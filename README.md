@@ -10,4 +10,4 @@ App:
 - Postgres DB / flyway / testcontainer with postgres
  
 Tests:
-JUnit 5, Aluure, Testcontainer, fixture, unit test, integration-test, mock mvc
+JUnit 5, Aluure, Testcontainer, fixture, unit test, integration-test, mock mvc, Cucumber, Allure
