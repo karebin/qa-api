@@ -2,12 +2,13 @@ package ru.test.data.manager.api.service.product;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.test.data.manager.api.db.TestContainerPostgres;
 import ru.test.data.manager.api.entity.ProductEntity;
@@ -25,7 +26,8 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(initializers = {TestContainerPostgres.class})
 @Testcontainers
 @ComponentScan({"ru.test.data.manager.api"})
-@ActiveProfiles("test")
+@Execution(ExecutionMode.CONCURRENT)
+@Transactional
 public class ProductServiceT {
     @Autowired
     ClientService clientService;
@@ -52,8 +54,8 @@ public class ProductServiceT {
             .build();
 
     @DisplayName("Проверка сохранения добавленого продукта в БД")
-    @Rollback
     @Test
+    @Transactional
     public void checkAddProductToClientInDB() {
         long productId = Long.parseLong(String.valueOf((productService
                 .addProductByClientId(testProductObj, testClient.getId())

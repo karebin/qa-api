@@ -2,6 +2,8 @@ package ru.test.data.manager.api.controllers.clients;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @ComponentScan({"ru.test.data.manager.api"})
 @AutoConfigureMockMvc
+@Execution(ExecutionMode.CONCURRENT)
+@Transactional
 public class ClientControllerIT {
     @Autowired
     private MockMvc mockMvc;

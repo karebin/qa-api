@@ -2,13 +2,14 @@ package ru.test.data.manager.api.controllers.product;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @ComponentScan({"ru.test.data.manager.api"})
 @AutoConfigureMockMvc
-
+@Execution(ExecutionMode.CONCURRENT)
 public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +53,7 @@ public class ProductControllerIT {
     }
 
     @Test
-    @Rollback
+    @Transactional
     @DisplayName("Добавление продукта клиенту")
     public void addProductToClient() throws Exception {
         String expected = ResourceHelper.getFixtureFromResource("fixture/response/product/addProduct.json");

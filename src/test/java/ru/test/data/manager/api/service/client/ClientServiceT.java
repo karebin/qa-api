@@ -4,12 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.test.data.manager.api.db.TestContainerPostgres;
 import ru.test.data.manager.api.entity.ClientEntity;
@@ -32,8 +33,8 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(initializers = {TestContainerPostgres.class})
 @Testcontainers
 @ComponentScan({"ru.test.data.manager.api"})
-@ActiveProfiles("test")
-
+@Execution(ExecutionMode.CONCURRENT)
+@Transactional
 public class ClientServiceT {
     Logger log = LogManager.getLogger("");
     @Autowired
@@ -126,7 +127,7 @@ public class ClientServiceT {
     }
 
     @DisplayName("Успешное добавление клиента")
-    @Rollback
+    @Transactional
     @Test
     public void checkSuccessClientAdd() {
         clientService.addClient(testClient);
